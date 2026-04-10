@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import {
   Star, MapPin, Users, Fuel, Settings2, Wind, ChevronLeft,
-  ChevronRight, Calendar, Shield, CheckCircle2, MessageCircle
+  ChevronRight, Calendar, Shield, CheckCircle2, MessageCircle, FileText
 } from 'lucide-react'
 import api from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
@@ -364,6 +364,17 @@ export default function CarDetail() {
               <div className="mt-4 flex items-center gap-2 text-xs text-white/30 justify-center">
                 <Shield size={12} />
                 Reserva segura e garantida pelo AutoShare
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-dark-border">
+                <a
+                  href="/public/contrato_locacao.txt"
+                  download="contrato_locacao_autoshare.txt"
+                  className="flex items-center justify-center gap-2 w-full text-xs text-white/60 hover:text-gold border border-white/10 hover:border-gold/40 bg-dark-surface hover:bg-gold/5 rounded-xl py-3 transition-all duration-200"
+                >
+                  <FileText size={14} className="text-gold/60" />
+                  Baixar template do contrato
+                </a>
               </div>
             </div>
           </div>

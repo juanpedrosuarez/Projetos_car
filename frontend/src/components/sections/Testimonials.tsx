@@ -6,7 +6,7 @@ const testimonials = [
     role: 'Empresária · São Paulo',
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80',
     rating: 5,
-    text: 'Aluguei um Range Rover para minha viagem de negócios e foi incrível. O processo foi simples, o carro estava impecável e o proprietário super atencioso. Definitivamente vou usar de novo.',
+    text: 'Precisava de um carro por um mês e encontrei uma ótima opção no AutoShare. O processo foi simples, o carro estava impecável e o proprietário super atencioso. Definitivamente vou usar de novo.',
   },
   {
     name: 'Rafael Mendes',
@@ -20,7 +20,7 @@ const testimonials = [
     role: 'Advogada · Curitiba',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80',
     rating: 5,
-    text: 'A experiência de dirigir um Porsche por um final de semana a um preço acessível foi surreal. A plataforma é elegante, intuitiva e o suporte é excelente.',
+    text: 'Aluguei um carro por um final de semana a um preço bem melhor do que nas locadoras tradicionais. A plataforma é intuitiva e o suporte é excelente.',
   },
 ]
 
@@ -31,7 +31,7 @@ export default function Testimonials() {
         <p className="text-gold text-sm font-medium mb-2">DEPOIMENTOS</p>
         <h2 className="section-title mb-3">O que nossos usuários dizem</h2>
         <p className="text-white/40 text-sm max-w-md mx-auto">
-          Mais de 8.500 pessoas já viveram a experiência AutoShare.
+          Mais de 8.500 pessoas já alugaram pelo AutoShare.
         </p>
       </div>
 
@@ -69,7 +69,7 @@ export default function Testimonials() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(201,168,76,0.05)_0%,transparent_70%)]" />
         <div className="relative z-10">
           <h3 className="text-2xl md:text-3xl font-bold mb-3">
-            Pronto para uma experiência <span className="text-gold">premium?</span>
+            Pronto para encontrar o <span className="text-gold">carro certo?</span>
           </h3>
           <p className="text-white/40 mb-6 max-w-md mx-auto text-sm">
             Junte-se a milhares de usuários que já descobriram uma forma melhor de alugar e anunciar carros.

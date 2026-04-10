@@ -15,7 +15,7 @@ export default function Footer() {
               <span className="text-xl font-bold">Auto<span className="text-gold">Share</span></span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed mb-5">
-              O marketplace de aluguel de carros premium do Brasil. Conectamos proprietários e motoristas com segurança e transparência.
+              O marketplace de aluguel de carros do Brasil. Conectamos proprietários e motoristas com segurança e transparência.
             </p>
             <div className="flex gap-3">
               {[Instagram, Twitter, Linkedin].map((Icon, i) => (

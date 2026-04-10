@@ -101,7 +101,7 @@ export default function Register() {
 
           {/* Benefits */}
           <div className="mt-5 space-y-2">
-            {['Anuncie seu carro gratuitamente', 'Acesse carros premium verificados', 'Reservas seguras e garantidas'].map(b => (
+            {['Anuncie seu carro gratuitamente', 'Acesse carros verificados', 'Reservas seguras e garantidas'].map(b => (
               <div key={b} className="flex items-center gap-2 text-xs text-white/40">
                 <CheckCircle2 size={12} className="text-gold shrink-0" /> {b}
               </div>

@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { SlidersHorizontal, X, ChevronDown } from 'lucide-react'
+import { SlidersHorizontal, X, ChevronDown, MapPin, LocateFixed } from 'lucide-react'
 import CarCard from '../components/ui/CarCard'
 import api from '../lib/api'
 
@@ -38,6 +38,13 @@ const SORT_OPTIONS = [
   { value: 'price_desc', label: 'Maior preço' },
 ]
 
+const RADIUS_OPTIONS = [
+  { label: 'Qualquer distância', value: '' },
+  { label: 'Até 50 km', value: '50' },
+  { label: 'Até 100 km', value: '100' },
+  { label: 'Até 200 km', value: '200' },
+]
+
 export default function CarListing() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [cars, setCars] = useState<Car[]>([])
@@ -46,6 +53,17 @@ export default function CarListing() {
   const [loading, setLoading] = useState(true)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
+  // Autocomplete de cidade
+  const [allCities, setAllCities] = useState<{ city: string; state: string }[]>([])
+  const [citySuggestions, setCitySuggestions] = useState<{ city: string; state: string }[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const cityInputRef = useRef<HTMLInputElement>(null)
+
+  // Geolocation state (from URL when coming from Hero)
+  const geoLat = searchParams.get('lat')
+  const geoLng = searchParams.get('lng')
+  const isGeo = !!(geoLat && geoLng)
+
   const [filters, setFilters] = useState({
     city: searchParams.get('city') || '',
     category: searchParams.get('category') || '',
@@ -53,13 +71,29 @@ export default function CarListing() {
     maxPrice: searchParams.get('maxPrice') || '',
     sortBy: searchParams.get('sortBy') || 'recent',
     page: Number(searchParams.get('page') || '1'),
+    radius: searchParams.get('radius') || '',
+    lat: searchParams.get('lat') || '',
+    lng: searchParams.get('lng') || '',
   })
 
   const fetchCars = useCallback(async () => {
     setLoading(true)
     try {
       const params = new URLSearchParams()
-      Object.entries(filters).forEach(([k, v]) => { if (v) params.set(k, String(v)) })
+      // If we have geo coords, use lat/lng/radius; otherwise use city/radius
+      if (filters.lat && filters.lng) {
+        params.set('lat', filters.lat)
+        params.set('lng', filters.lng)
+        if (filters.radius) params.set('radius', filters.radius)
+      } else {
+        if (filters.city) params.set('city', filters.city)
+        if (filters.radius) params.set('radius', filters.radius)
+      }
+      if (filters.category) params.set('category', filters.category)
+      if (filters.minPrice) params.set('minPrice', filters.minPrice)
+      if (filters.maxPrice) params.set('maxPrice', filters.maxPrice)
+      if (filters.sortBy) params.set('sortBy', filters.sortBy)
+      if (filters.page > 1) params.set('page', String(filters.page))
       const { data } = await api.get(`/cars?${params.toString()}`)
       setCars(data.cars)
       setTotal(data.total)
@@ -74,19 +108,61 @@ export default function CarListing() {
   useEffect(() => {
     fetchCars()
     const params = new URLSearchParams()
-    Object.entries(filters).forEach(([k, v]) => { if (v && !(k === 'page' && v === 1)) params.set(k, String(v)) })
+    if (filters.lat && filters.lng) {
+      params.set('lat', filters.lat)
+      params.set('lng', filters.lng)
+    } else if (filters.city) {
+      params.set('city', filters.city)
+    }
+    if (filters.radius) params.set('radius', filters.radius)
+    if (filters.category) params.set('category', filters.category)
+    if (filters.minPrice) params.set('minPrice', filters.minPrice)
+    if (filters.maxPrice) params.set('maxPrice', filters.maxPrice)
+    if (filters.sortBy && filters.sortBy !== 'recent') params.set('sortBy', filters.sortBy)
+    if (filters.page > 1) params.set('page', String(filters.page))
     setSearchParams(params, { replace: true })
   }, [filters, fetchCars, setSearchParams])
 
+  // Carrega todas as cidades uma única vez
+  useEffect(() => {
+    api.get('/cars/cities').then(({ data }) => setAllCities(data)).catch(() => {})
+  }, [])
+
+  // Filtra sugestões conforme o usuário digita
+  const handleCityInput = (value: string) => {
+    updateFilter('city', value)
+    if (value.length >= 2) {
+      const matches = allCities.filter(c =>
+        c.city.toLowerCase().includes(value.toLowerCase())
+      )
+      setCitySuggestions(matches)
+      setShowSuggestions(matches.length > 0)
+    } else {
+      setShowSuggestions(false)
+    }
+  }
+
+  const selectCity = (city: string) => {
+    updateFilter('city', city)
+    setShowSuggestions(false)
+    cityInputRef.current?.blur()
+  }
+
   const updateFilter = (key: string, value: string | number) => {
-    setFilters(prev => ({ ...prev, [key]: value, page: key !== 'page' ? 1 : Number(value) }))
+    setFilters(prev => ({
+      ...prev,
+      [key]: value,
+      page: key !== 'page' ? 1 : Number(value),
+      // Clear geo coords when user manually types a city
+      ...(key === 'city' ? { lat: '', lng: '' } : {}),
+    }))
   }
 
   const clearFilters = () => {
-    setFilters({ city: '', category: '', minPrice: '', maxPrice: '', sortBy: 'recent', page: 1 })
+    setFilters({ city: '', category: '', minPrice: '', maxPrice: '', sortBy: 'recent', page: 1, radius: '', lat: '', lng: '' })
   }
 
-  const activeFiltersCount = [filters.city, filters.category, filters.minPrice, filters.maxPrice]
+  const activeFiltersCount = [filters.city || (filters.lat && filters.lng), filters.category, filters.minPrice, filters.maxPrice, filters.radius]
     .filter(Boolean).length
 
   return (
@@ -96,9 +172,12 @@ export default function CarListing() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white">
-              {filters.city ? `Carros em ${filters.city}` : 'Explorar carros'}
+              {filters.lat && filters.lng
+                ? `Carros próximos a você${filters.radius ? ` (${filters.radius} km)` : ''}`
+                : filters.city ? `Carros em ${filters.city}` : 'Explorar carros'}
             </h1>
-            <p className="text-white/40 text-sm mt-1">
+            <p className="text-white/40 text-sm mt-1 flex items-center gap-1.5">
+              {filters.lat && filters.lng && <LocateFixed size={12} className="text-emerald-400/70" />}
               {loading ? 'Buscando...' : `${total} veículos encontrados`}
             </p>
           </div>
@@ -145,16 +224,48 @@ export default function CarListing() {
                 )}
               </div>
 
-              {/* City */}
-              <div className="mb-4">
+              {/* City autocomplete */}
+              <div className="mb-4 relative">
                 <label className="text-xs font-medium text-white/60 mb-2 block">Cidade</label>
-                <input
-                  type="text"
-                  placeholder="Ex: São Paulo"
-                  value={filters.city}
-                  onChange={(e) => updateFilter('city', e.target.value)}
-                  className="input-dark text-sm"
-                />
+                <div className="relative">
+                  <MapPin size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+                  <input
+                    ref={cityInputRef}
+                    type="text"
+                    placeholder="Ex: São Paulo"
+                    value={filters.city}
+                    onChange={(e) => handleCityInput(e.target.value)}
+                    onFocus={() => filters.city.length >= 2 && setShowSuggestions(citySuggestions.length > 0)}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                    className="input-dark text-sm pl-8"
+                    autoComplete="off"
+                  />
+                  {filters.city && (
+                    <button
+                      onClick={() => { updateFilter('city', ''); setShowSuggestions(false) }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors"
+                    >
+                      <X size={13} />
+                    </button>
+                  )}
+                </div>
+                {showSuggestions && (
+                  <ul className="absolute z-50 top-full mt-1 left-0 right-0 bg-dark-card border border-dark-border rounded-xl overflow-hidden shadow-xl">
+                    {citySuggestions.map(({ city, state }) => (
+                      <li key={`${city}-${state}`}>
+                        <button
+                          onMouseDown={() => selectCity(city)}
+                          className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-white/70 hover:bg-dark-hover hover:text-gold transition-colors text-left"
+                        >
+                          <MapPin size={12} className="text-gold/50 shrink-0" />
+                          {city}
+                          <span className="text-white/30 text-xs ml-auto">{state}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
               </div>
 
               {/* Category */}

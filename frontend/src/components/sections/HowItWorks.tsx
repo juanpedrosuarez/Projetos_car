@@ -5,7 +5,7 @@ const steps = [
     icon: <Search size={28} />,
     step: '01',
     title: 'Encontre o carro ideal',
-    description: 'Explore centenas de veículos premium verificados. Use os filtros de cidade, categoria e preço para achar exatamente o que você precisa.',
+    description: 'Explore centenas de veículos verificados. Use os filtros de cidade, categoria e preço para achar exatamente o que você precisa.',
   },
   {
     icon: <CalendarCheck size={28} />,
@@ -29,7 +29,7 @@ export default function HowItWorks() {
           <p className="text-gold text-sm font-medium mb-2">SIMPLES E RÁPIDO</p>
           <h2 className="section-title mb-3">Como funciona</h2>
           <p className="text-white/40 max-w-md mx-auto text-sm">
-            Em poucos passos você está dirigindo o carro dos seus sonhos.
+            Em poucos passos você encontra e reserva o carro ideal.
           </p>
         </div>
 

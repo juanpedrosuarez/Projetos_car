@@ -8,6 +8,7 @@ const VALID_FUELS = ['GASOLINA', 'DIESEL', 'ELETRICO', 'HIBRIDO', 'FLEX']
 import { authenticate, AuthRequest } from '../middleware/auth.middleware'
 import { uploadImages } from '../middleware/upload.middleware'
 import { parseCar, parseCars } from '../lib/parseImages'
+import { citiesWithinRadius, getCityCoords } from '../lib/citiesCoords'
 
 const router = Router()
 const prisma = new PrismaClient()
@@ -23,17 +24,41 @@ router.get('/', [
   query('maxYear').optional().isInt({ max: 2030 }),
   query('sortBy').optional().isIn(['price_asc', 'price_desc', 'rating', 'recent']),
   query('page').optional().isInt({ min: 1 }),
+  query('lat').optional().isFloat(),
+  query('lng').optional().isFloat(),
+  query('radius').optional().isFloat({ min: 1 }),
 ], async (req: AuthRequest, res: Response): Promise<void> => {
-  const { city, category, minPrice, maxPrice, brand, minYear, maxYear, sortBy, page = '1' } = req.query
+  const { city, category, minPrice, maxPrice, brand, minYear, maxYear, sortBy, page = '1', lat, lng, radius } = req.query
 
   const PAGE_SIZE = 9
   const skip = (Number(page) - 1) * PAGE_SIZE
 
   const where: Record<string, unknown> = { isAvailable: true }
 
-  if (city) where.city = { contains: String(city), mode: 'insensitive' }
-  if (category) where.category = String(category).toUpperCase() as CarCategory
-  if (brand) where.brand = { contains: String(brand), mode: 'insensitive' }
+  const normalize = (s: string) =>
+    s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim()
+
+  // Filtro por raio geográfico (lat/lng + radius em km)
+  if (lat && lng && radius) {
+    const nearbyCities = citiesWithinRadius(Number(lat), Number(lng), Number(radius))
+    where.city = { in: nearbyCities }
+  } else if (city) {
+    // Filtro por cidade + raio opcional usando coordenadas da cidade
+    const cityRadius = radius ? Number(radius) : 0
+    const coords = getCityCoords(String(city))
+    if (cityRadius > 0 && coords) {
+      const nearbyCities = citiesWithinRadius(coords.lat, coords.lng, cityRadius)
+      where.city = { in: nearbyCities }
+    } else {
+      const normalizedSearch = normalize(String(city))
+      const allCities = await prisma.car.findMany({ select: { city: true }, distinct: ['city'] })
+      const matching = allCities.map(c => c.city).filter(c => normalize(c).includes(normalizedSearch))
+      where.city = matching.length > 0 ? { in: matching } : { in: [] }
+    }
+  }
+
+  if (category) where.category = String(category).toUpperCase()
+  if (brand) where.brand = { contains: String(brand) }
   if (minPrice || maxPrice) {
     where.pricePerDay = {
       ...(minPrice && { gte: Number(minPrice) }),
@@ -68,6 +93,21 @@ router.get('/', [
     res.json({ cars: parseCars(cars), total, page: Number(page), pages: Math.ceil(total / PAGE_SIZE) })
   } catch {
     res.status(500).json({ error: 'Erro ao buscar carros.' })
+  }
+})
+
+// GET /api/cars/cities — lista de cidades disponíveis para autocomplete
+router.get('/cities', async (_req, res: Response): Promise<void> => {
+  try {
+    const result = await prisma.car.findMany({
+      where: { isAvailable: true },
+      select: { city: true, state: true },
+      distinct: ['city'],
+      orderBy: { city: 'asc' },
+    })
+    res.json(result.map(r => ({ city: r.city, state: r.state })))
+  } catch {
+    res.status(500).json({ error: 'Erro ao buscar cidades.' })
   }
 })
 

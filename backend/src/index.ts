@@ -39,6 +39,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 // Servir arquivos de upload estaticamente
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
+app.use('/public', express.static(path.join(__dirname, '../public')))
 
 // Rotas
 app.use('/api/auth', authLimiter, authRoutes)

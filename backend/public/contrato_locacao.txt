@@ -1,0 +1,199 @@
+================================================================================
+                    CONTRATO DE LOCAÇÃO DE VEÍCULO AUTOMOTOR
+                              AutoShare — Locação P2P
+================================================================================
+
+Pelo presente instrumento particular, as partes abaixo identificadas celebram
+o presente Contrato de Locação de Veículo Automotor, nos termos dos arts. 565
+a 578 do Código Civil Brasileiro (Lei 10.406/2002).
+
+────────────────────────────────────────────────────────────────────────────────
+1. DAS PARTES
+────────────────────────────────────────────────────────────────────────────────
+
+LOCADOR (Proprietário do Veículo):
+  Nome completo : ____________________________________________________________
+  CPF           : ______________________  RG: ________________________________
+  Endereço      : ____________________________________________________________
+  Cidade/Estado : ____________________________________________________________
+  Telefone      : ____________________________  E-mail: ______________________
+
+LOCATÁRIO (Motorista):
+  Nome completo : ____________________________________________________________
+  CPF           : ______________________  RG: ________________________________
+  CNH           : ______________________  Categoria: _______  Validade: ______
+  Endereço      : ____________________________________________________________
+  Cidade/Estado : ____________________________________________________________
+  Telefone      : ____________________________  E-mail: ______________________
+
+────────────────────────────────────────────────────────────────────────────────
+2. DO VEÍCULO
+────────────────────────────────────────────────────────────────────────────────
+
+  Marca/Modelo  : ____________________________________________________________
+  Ano Fab./Mod. : ____________ / ____________
+  Cor           : ____________________________________________________________
+  Placa         : ____________________  RENAVAM: _____________________________
+  Chassi        : ____________________________________________________________
+  KM na retirada: ____________________  KM na devolução: _____________________
+
+────────────────────────────────────────────────────────────────────────────────
+3. DO PERÍODO E VALORES
+────────────────────────────────────────────────────────────────────────────────
+
+  Data/hora de retirada  : ______ / ______ / ______  às  ______:______
+  Data/hora de devolução : ______ / ______ / ______  às  ______:______
+  Total de dias          : ____________
+  Valor diário (R$)      : ____________
+  Valor total (R$)       : ____________
+  Depósito de segurança  : R$ ____________  (devolvido em até 5 dias após devolução)
+  Forma de pagamento     : ____________________________________________________________
+
+────────────────────────────────────────────────────────────────────────────────
+4. DAS OBRIGAÇÕES DO LOCATÁRIO
+────────────────────────────────────────────────────────────────────────────────
+
+O LOCATÁRIO se compromete a:
+
+4.1  Utilizar o veículo com zelo e cuidado, responsabilizando-se por quaisquer
+     danos causados durante o período de locação, sejam eles parciais ou totais.
+
+4.2  Devolver o veículo na data, horário e local acordados, nas mesmas condições
+     em que o recebeu, conforme registro fotográfico de entrega (Cláusula 8).
+
+4.3  Arcar com todas as multas de trânsito geradas durante o período de locação,
+     comprometendo-se a comunicar ao LOCADOR no prazo de 24 horas.
+
+4.4  Responsabilizar-se pelo abastecimento, devolvendo o veículo com o mesmo
+     nível de combustível registrado na entrega.
+
+4.5  Não sublocar, emprestar ou ceder o veículo a terceiros sem autorização
+     expressa e por escrito do LOCADOR.
+
+4.6  Em caso de acidente: parar o veículo, acionar o SAMU/Bombeiros se houver
+     vítimas, registrar Boletim de Ocorrência e comunicar o LOCADOR imediatamente.
+
+4.7  Manter CNH válida e na categoria compatível com o veículo durante todo
+     o período de locação.
+
+4.8  Utilizar o veículo exclusivamente no território nacional, salvo autorização
+     prévia e por escrito do LOCADOR.
+
+────────────────────────────────────────────────────────────────────────────────
+5. DAS OBRIGAÇÕES DO LOCADOR
+────────────────────────────────────────────────────────────────────────────────
+
+O LOCADOR se compromete a:
+
+5.1  Entregar o veículo em perfeitas condições de uso, com documentação em dia
+     (CRLV, seguro obrigatório DPVAT vigente e licenciamento quitado).
+
+5.2  Garantir que o veículo não possui restrições, débitos de IPVA ou multas
+     anteriores à locação que possam impedir sua circulação.
+
+5.3  Informar ao LOCATÁRIO sobre particularidades do veículo relevantes para
+     sua operação segura.
+
+5.4  Não interromper a locação antes do prazo acordado, salvo descumprimento
+     contratual pelo LOCATÁRIO devidamente comprovado.
+
+────────────────────────────────────────────────────────────────────────────────
+6. DOS DANOS E RESPONSABILIDADES
+────────────────────────────────────────────────────────────────────────────────
+
+6.1  Danos identificados na devolução que não constem no registro fotográfico
+     de entrega serão de responsabilidade integral do LOCATÁRIO.
+
+6.2  Em caso de roubo ou furto do veículo durante a locação, o LOCATÁRIO deverá
+     registrar B.O. imediatamente e repassar cópia ao LOCADOR em até 24 horas.
+     A responsabilidade sobre franquia do seguro será negociada entre as partes.
+
+6.3  Avarias decorrentes de desgaste natural e uso adequado não são de
+     responsabilidade do LOCATÁRIO.
+
+6.4  O depósito de segurança (Cláusula 3) poderá ser retido total ou
+     parcialmente para cobrir danos, multas ou débitos identificados.
+
+────────────────────────────────────────────────────────────────────────────────
+7. DO CANCELAMENTO E RESCISÃO
+────────────────────────────────────────────────────────────────────────────────
+
+7.1  Cancelamento pelo LOCATÁRIO com mais de 48h de antecedência: reembolso
+     integral dos valores pagos.
+
+7.2  Cancelamento pelo LOCATÁRIO com menos de 48h: retenção de 1 (uma) diária
+     a título de multa compensatória.
+
+7.3  Cancelamento pelo LOCADOR após confirmação: devolução integral dos valores
+     pagos e pagamento de multa equivalente a 1 (uma) diária ao LOCATÁRIO.
+
+7.4  Devolução antecipada pelo LOCATÁRIO: não haverá reembolso proporcional
+     pelos dias não utilizados, salvo acordo expresso entre as partes.
+
+────────────────────────────────────────────────────────────────────────────────
+8. DA VISTORIA E REGISTRO FOTOGRÁFICO
+────────────────────────────────────────────────────────────────────────────────
+
+8.1  Na entrega do veículo, ambas as partes realizarão vistoria conjunta,
+     registrando fotograficamente o estado do veículo (exterior, interior,
+     pneus, combustível e hodômetro). As fotos serão datadas e compartilhadas.
+
+8.2  O mesmo procedimento será realizado na devolução, servindo as imagens
+     como prova do estado do veículo em ambos os momentos.
+
+8.3  A ausência de registro fotográfico na entrega beneficia o LOCATÁRIO em
+     caso de divergência.
+
+────────────────────────────────────────────────────────────────────────────────
+9. DA PROTEÇÃO DE DADOS (LGPD)
+────────────────────────────────────────────────────────────────────────────────
+
+Os dados pessoais coletados neste contrato serão utilizados exclusivamente para
+fins de identificação das partes e execução contratual, nos termos da Lei
+13.709/2018 (LGPD). Ambas as partes concordam em não compartilhar os dados
+do outro com terceiros sem consentimento expresso.
+
+────────────────────────────────────────────────────────────────────────────────
+10. DO FORO
+────────────────────────────────────────────────────────────────────────────────
+
+As partes elegem o foro da Comarca de _____________________________ / ______,
+com renúncia a qualquer outro, por mais privilegiado que seja, para dirimir
+quaisquer dúvidas ou litígios decorrentes deste contrato.
+
+────────────────────────────────────────────────────────────────────────────────
+11. DAS DISPOSIÇÕES GERAIS
+────────────────────────────────────────────────────────────────────────────────
+
+11.1  Este contrato é celebrado em caráter irrevogável e irretratável,
+      obrigando as partes e seus sucessores.
+
+11.2  Qualquer alteração somente terá validade se realizada por escrito e
+      assinada por ambas as partes.
+
+11.3  A tolerância de uma das partes quanto ao descumprimento de qualquer
+      cláusula não implica novação ou renúncia ao direito.
+
+────────────────────────────────────────────────────────────────────────────────
+
+_______________________________, ______ de _________________________ de ________
+
+
+LOCADOR:                                    LOCATÁRIO:
+
+___________________________________         ___________________________________
+Nome:                                       Nome:
+CPF:                                        CPF:
+
+
+TESTEMUNHA 1:                               TESTEMUNHA 2:
+
+___________________________________         ___________________________________
+Nome:                                       Nome:
+CPF:                                        CPF:
+
+────────────────────────────────────────────────────────────────────────────────
+         AutoShare — Marketplace de Aluguel de Carros | autoshare.com.br
+  Este template é um modelo orientativo. Para contratos de alto valor, recomenda-
+            se o reconhecimento de firma em cartório por ambas as partes.
+================================================================================
