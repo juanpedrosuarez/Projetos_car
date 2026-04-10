@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  avatar       String?
+  phone        String?
+  cars         Car[]
+  reservations Reservation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("users")
+}
+
+model Car {
+  id              String        @id @default(uuid())
+  ownerId         String
+  owner           User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name            String
+  brand           String
+  model           String
+  year            Int
+  category        CarCategory
+  transmission    Transmission
+  fuel            FuelType
+  seats           Int
+  airConditioning Boolean       @default(true)
+  description     String
+  pricePerDay     Decimal       @db.Decimal(10, 2)
+  city            String
+  state           String
+  images          String[]
+  rating          Float         @default(0)
+  reviewCount     Int           @default(0)
+  isAvailable     Boolean       @default(true)
+  reservations    Reservation[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("cars")
+}
+
+model Reservation {
+  id         String            @id @default(uuid())
+  carId      String
+  car        Car               @relation(fields: [carId], references: [id], onDelete: Cascade)
+  renterId   String
+  renter     User              @relation(fields: [renterId], references: [id], onDelete: Cascade)
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Decimal           @db.Decimal(10, 2)
+  status     ReservationStatus @default(PENDING)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@map("reservations")
+}
+
+enum CarCategory {
+  SUV
+  SEDAN
+  ESPORTIVO
+  ECONOMICO
+  PICKUP
+  HATCH
+}
+
+enum Transmission {
+  AUTOMATICO
+  MANUAL
+}
+
+enum FuelType {
+  GASOLINA
+  DIESEL
+  ELETRICO
+  HIBRIDO
+  FLEX
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
