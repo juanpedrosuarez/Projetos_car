@@ -59,11 +59,6 @@ export default function CarListing() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const cityInputRef = useRef<HTMLInputElement>(null)
 
-  // Geolocation state (from URL when coming from Hero)
-  const geoLat = searchParams.get('lat')
-  const geoLng = searchParams.get('lng')
-  const isGeo = !!(geoLat && geoLng)
-
   const [filters, setFilters] = useState({
     city: searchParams.get('city') || '',
     category: searchParams.get('category') || '',
@@ -224,6 +219,20 @@ export default function CarListing() {
                 )}
               </div>
 
+              {/* Geo hint */}
+              {filters.lat && filters.lng && (
+                <div className="mb-4 flex items-center gap-1.5 text-xs text-emerald-400/80 bg-emerald-400/5 border border-emerald-400/20 rounded-lg px-3 py-2">
+                  <LocateFixed size={11} />
+                  Usando sua localização
+                  <button
+                    onClick={() => setFilters(prev => ({ ...prev, lat: '', lng: '', page: 1 }))}
+                    className="ml-auto text-white/30 hover:text-white"
+                  >
+                    <X size={11} />
+                  </button>
+                </div>
+              )}
+
               {/* City autocomplete */}
               <div className="mb-4 relative">
                 <label className="text-xs font-medium text-white/60 mb-2 block">Cidade</label>
@@ -232,13 +241,14 @@ export default function CarListing() {
                   <input
                     ref={cityInputRef}
                     type="text"
-                    placeholder="Ex: São Paulo"
+                    placeholder={filters.lat && filters.lng ? 'Localização atual' : 'Ex: São Paulo'}
                     value={filters.city}
                     onChange={(e) => handleCityInput(e.target.value)}
                     onFocus={() => filters.city.length >= 2 && setShowSuggestions(citySuggestions.length > 0)}
                     onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
                     className="input-dark text-sm pl-8"
                     autoComplete="off"
+                    disabled={!!(filters.lat && filters.lng)}
                   />
                   {filters.city && (
                     <button
@@ -266,6 +276,19 @@ export default function CarListing() {
                   </ul>
                 )}
               </div>
+
+              {/* Radius */}
+              <div className="mb-4">
+                <label className="text-xs font-medium text-white/60 mb-2 block">Raio de busca</label>
+                <select
+                  value={filters.radius}
+                  onChange={(e) => updateFilter('radius', e.target.value)}
+                  className="input-dark text-sm appearance-none cursor-pointer"
+                >
+                  {RADIUS_OPTIONS.map(({ label, value }) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Category */}
@@ -290,7 +313,7 @@ export default function CarListing() {
 
               {/* Price range */}
               <div className="mb-4">
-                <label className="text-xs font-medium text-white/60 mb-2 block">Preço por dia</label>
+                <label className="text-xs font-medium text-white/60 mb-2 block">Preço por dia (R$)</label>
                 <div className="flex gap-2">
                   <input
                     type="number"

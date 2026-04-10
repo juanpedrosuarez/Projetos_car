@@ -140,7 +140,7 @@ router.get('/car/:carId', async (req, res: Response): Promise<void> => {
       },
       select: { startDate: true, endDate: true },
     })
-    res.json(reservations.map(parseResImages))
+    res.json(reservations)
   } catch {
     res.status(500).json({ error: 'Erro ao buscar disponibilidade.' })
   }

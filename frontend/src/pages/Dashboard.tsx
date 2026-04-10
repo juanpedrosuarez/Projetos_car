@@ -46,9 +46,10 @@ export default function Dashboard() {
   const { user } = useAuth()
   const navigate = useNavigate()
 
-  const [tab, setTab] = useState<'cars' | 'reservations' | 'new'>('cars')
+  const [tab, setTab] = useState<'cars' | 'reservations' | 'rentals' | 'new'>('cars')
   const [cars, setCars] = useState<MyCar[]>([])
   const [reservations, setReservations] = useState<Reservation[]>([])
+  const [myRentals, setMyRentals] = useState<Reservation[]>([])
   const [loading, setLoading] = useState(true)
   const [submitLoading, setSubmitLoading] = useState(false)
   const [submitError, setSubmitError] = useState('')
@@ -69,9 +70,11 @@ export default function Dashboard() {
     Promise.all([
       api.get('/cars/my'),
       api.get('/reservations/received'),
-    ]).then(([carsRes, resRes]) => {
+      api.get('/reservations/my'),
+    ]).then(([carsRes, resRes, rentalsRes]) => {
       setCars(carsRes.data)
       setReservations(resRes.data)
+      setMyRentals(rentalsRes.data)
     }).catch(console.error).finally(() => setLoading(false))
   }, [user, navigate])
 
@@ -150,7 +153,7 @@ export default function Dashboard() {
           {[
             { label: 'Carros anunciados', value: cars.length, icon: <Car size={18} /> },
             { label: 'Reservas recebidas', value: reservations.length, icon: <Calendar size={18} /> },
-            { label: 'Confirmadas', value: reservations.filter(r => r.status === 'CONFIRMED').length, icon: <CheckCircle2 size={18} /> },
+            { label: 'Minhas locações', value: myRentals.length, icon: <CheckCircle2 size={18} /> },
             { label: 'Disponíveis', value: cars.filter(c => c.isAvailable).length, icon: <Clock size={18} /> },
           ].map(({ label, value, icon }) => (
             <div key={label} className="card-dark p-4 flex flex-col gap-3">
@@ -162,10 +165,11 @@ export default function Dashboard() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 bg-dark-surface border border-dark-border rounded-xl p-1 mb-6 w-fit">
+        <div className="flex flex-wrap gap-1 bg-dark-surface border border-dark-border rounded-xl p-1 mb-6 w-fit">
           {[
             { key: 'cars', label: 'Meus carros' },
             { key: 'reservations', label: 'Reservas recebidas' },
+            { key: 'rentals', label: 'Minhas locações' },
             { key: 'new', label: '+ Novo anúncio' },
           ].map(({ key, label }) => (
             <button
@@ -283,6 +287,62 @@ export default function Dashboard() {
                           Locatário: <span className="text-white">{res.renter.name}</span> · {res.renter.email}
                           {res.renter.phone && ` · ${res.renter.phone}`}
                         </p>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="text-gold font-bold">R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                      <div className="text-xs text-white/30 mt-0.5">total</div>
+                    </div>
+                  </div>
+                )
+              })
+            )}
+          </div>
+        )}
+
+        {/* Tab: My rentals (as renter) */}
+        {tab === 'rentals' && (
+          <div className="space-y-3">
+            {myRentals.length === 0 ? (
+              <div className="text-center py-16">
+                <Calendar className="mx-auto text-white/20 mb-4" size={48} />
+                <h3 className="text-lg font-semibold text-white mb-2">Nenhuma locação realizada</h3>
+                <p className="text-white/40 text-sm mb-4">Quando você reservar um carro, aparecerá aqui.</p>
+                <a href="/cars" className="btn-gold text-sm inline-block">Explorar carros</a>
+              </div>
+            ) : (
+              myRentals.map(res => {
+                const statusCfg = STATUS_CONFIG[res.status] || STATUS_CONFIG.PENDING
+                const total = typeof res.totalPrice === 'string' ? parseFloat(res.totalPrice) : res.totalPrice
+                return (
+                  <div key={res.id} className="card-dark p-4 flex flex-col sm:flex-row gap-4">
+                    <img
+                      src={res.car?.images[0] || 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=120&q=80'}
+                      alt={res.car?.name}
+                      className="w-full sm:w-28 h-20 object-cover rounded-xl shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="font-semibold text-white text-sm">{res.car?.name}</h4>
+                        <span className={`flex items-center gap-1 text-xs ${statusCfg.color} shrink-0`}>
+                          {statusCfg.icon} {statusCfg.label}
+                        </span>
+                      </div>
+                      <p className="text-white/40 text-xs mt-1">
+                        {new Date(res.startDate).toLocaleDateString('pt-BR')} → {new Date(res.endDate).toLocaleDateString('pt-BR')}
+                      </p>
+                      {res.status !== 'CANCELLED' && (
+                        <button
+                          onClick={async () => {
+                            try {
+                              await api.patch(`/reservations/${res.id}/cancel`)
+                              setMyRentals(prev => prev.map(r => r.id === res.id ? { ...r, status: 'CANCELLED' } : r))
+                            } catch { /* ignore */ }
+                          }}
+                          className="text-xs text-red-400/70 hover:text-red-400 mt-2 transition-colors"
+                        >
+                          Cancelar reserva
+                        </button>
                       )}
                     </div>
                     <div className="text-right shrink-0">
