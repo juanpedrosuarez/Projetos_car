@@ -105,7 +105,7 @@ router.get('/:id', async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const car = await prisma.car.findUnique({
       where: { id: req.params.id },
-      include: { owner: { select: { id: true, name: true, avatar: true, createdAt: true } } },
+      include: { owner: { select: { id: true, name: true, avatar: true, phone: true, createdAt: true } } },
     })
 
     if (!car) {

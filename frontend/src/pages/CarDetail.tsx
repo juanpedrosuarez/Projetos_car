@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import {
   Star, MapPin, Users, Fuel, Settings2, Wind, ChevronLeft,
-  ChevronRight, Calendar, Shield, CheckCircle2, User
+  ChevronRight, Calendar, Shield, CheckCircle2, MessageCircle
 } from 'lucide-react'
 import api from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
@@ -26,7 +26,7 @@ interface Car {
   rating: number
   reviewCount: number
   isAvailable: boolean
-  owner: { id: string; name: string; avatar?: string; createdAt: string }
+  owner: { id: string; name: string; avatar?: string; phone?: string; createdAt: string }
 }
 
 interface BlockedDate { startDate: string; endDate: string }
@@ -223,23 +223,47 @@ export default function CarDetail() {
             <div className="card-dark p-6">
               <h2 className="font-semibold text-white mb-4">Anunciante</h2>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-dark-surface border border-dark-border rounded-full flex items-center justify-center text-gold font-bold text-lg">
+                <div className="w-12 h-12 bg-dark-surface border border-dark-border rounded-full flex items-center justify-center text-gold font-bold text-lg shrink-0">
                   {car.owner.avatar
                     ? <img src={car.owner.avatar} alt={car.owner.name} className="w-full h-full rounded-full object-cover" />
                     : car.owner.name.charAt(0).toUpperCase()
                   }
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <p className="font-medium text-white">{car.owner.name}</p>
                   <p className="text-xs text-white/40">
                     Membro desde {new Date(car.owner.createdAt).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
                   </p>
                 </div>
-                <div className="ml-auto flex items-center gap-1 bg-dark-surface border border-dark-border rounded-full px-3 py-1.5">
+                <div className="flex items-center gap-1 bg-dark-surface border border-dark-border rounded-full px-3 py-1.5 shrink-0">
                   <CheckCircle2 size={13} className="text-emerald-400" />
                   <span className="text-xs text-white/60">Verificado</span>
                 </div>
               </div>
+
+              {car.owner.phone ? (
+                <a
+                  href={`https://wa.me/55${car.owner.phone.replace(/\D/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => {
+                    api.post('/analytics/whatsapp-click', {
+                      nome: user?.name ?? 'Anônimo',
+                      numero: user?.phone ?? 'não informado',
+                      anunciante: car.owner.name,
+                      anuncio: car.name,
+                    }).catch(() => {})
+                  }}
+                  className="mt-4 flex items-center justify-center gap-2 w-full bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 hover:border-[#25D366]/60 text-[#25D366] font-medium text-sm py-3 rounded-xl transition-all duration-200"
+                >
+                  <MessageCircle size={17} />
+                  Falar no WhatsApp
+                </a>
+              ) : (
+                <p className="mt-4 text-center text-xs text-white/30">
+                  Anunciante não informou WhatsApp
+                </p>
+              )}
             </div>
           </div>
 

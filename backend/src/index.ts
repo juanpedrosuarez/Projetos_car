@@ -6,6 +6,7 @@ import path from 'path'
 import authRoutes from './routes/auth.routes'
 import carRoutes from './routes/cars.routes'
 import reservationRoutes from './routes/reservations.routes'
+import analyticsRoutes from './routes/analytics.routes'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -43,6 +44,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 app.use('/api/auth', authLimiter, authRoutes)
 app.use('/api/cars', carRoutes)
 app.use('/api/reservations', reservationRoutes)
+app.use('/api/analytics', analyticsRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => {
