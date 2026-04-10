@@ -1,5 +1,9 @@
-import { PrismaClient, CarCategory, Transmission, FuelType } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+
+const CarCategory = { SUV: 'SUV', SEDAN: 'SEDAN', ESPORTIVO: 'ESPORTIVO', ECONOMICO: 'ECONOMICO' } as const
+const Transmission = { AUTOMATICO: 'AUTOMATICO', MANUAL: 'MANUAL' } as const
+const FuelType = { GASOLINA: 'GASOLINA', DIESEL: 'DIESEL', ELETRICO: 'ELETRICO', HIBRIDO: 'HIBRIDO', FLEX: 'FLEX' } as const
 
 const prisma = new PrismaClient()
 
@@ -74,7 +78,7 @@ async function main() {
       pricePerDay: 500,
       city: 'São Paulo',
       state: 'SP',
-      images: UNSPLASH_CARS.suv,
+      images: JSON.stringify(UNSPLASH_CARS.suv),
       rating: 4.9,
       reviewCount: 47,
     },
@@ -93,7 +97,7 @@ async function main() {
       pricePerDay: 420,
       city: 'Rio de Janeiro',
       state: 'RJ',
-      images: [UNSPLASH_CARS.suv[1], UNSPLASH_CARS.suv[0], UNSPLASH_CARS.suv[2]],
+      images: JSON.stringify([UNSPLASH_CARS.suv[1], UNSPLASH_CARS.suv[0], UNSPLASH_CARS.suv[2]]),
       rating: 4.8,
       reviewCount: 32,
     },
@@ -113,7 +117,7 @@ async function main() {
       pricePerDay: 380,
       city: 'São Paulo',
       state: 'SP',
-      images: UNSPLASH_CARS.sedan,
+      images: JSON.stringify(UNSPLASH_CARS.sedan),
       rating: 4.7,
       reviewCount: 61,
     },
@@ -132,7 +136,7 @@ async function main() {
       pricePerDay: 310,
       city: 'Curitiba',
       state: 'PR',
-      images: [UNSPLASH_CARS.sedan[1], UNSPLASH_CARS.sedan[2], UNSPLASH_CARS.sedan[0]],
+      images: JSON.stringify([UNSPLASH_CARS.sedan[1], UNSPLASH_CARS.sedan[2], UNSPLASH_CARS.sedan[0]]),
       rating: 4.6,
       reviewCount: 28,
     },
@@ -151,7 +155,7 @@ async function main() {
       pricePerDay: 220,
       city: 'Brasília',
       state: 'DF',
-      images: [UNSPLASH_CARS.sedan[2], UNSPLASH_CARS.sedan[0], UNSPLASH_CARS.sedan[1]],
+      images: JSON.stringify([UNSPLASH_CARS.sedan[2], UNSPLASH_CARS.sedan[0], UNSPLASH_CARS.sedan[1]]),
       rating: 4.5,
       reviewCount: 19,
     },
@@ -171,7 +175,7 @@ async function main() {
       pricePerDay: 500,
       city: 'São Paulo',
       state: 'SP',
-      images: UNSPLASH_CARS.esportivo,
+      images: JSON.stringify(UNSPLASH_CARS.esportivo),
       rating: 5.0,
       reviewCount: 15,
     },
@@ -190,7 +194,7 @@ async function main() {
       pricePerDay: 500,
       city: 'Rio de Janeiro',
       state: 'RJ',
-      images: [UNSPLASH_CARS.esportivo[1], UNSPLASH_CARS.esportivo[2], UNSPLASH_CARS.esportivo[0]],
+      images: JSON.stringify([UNSPLASH_CARS.esportivo[1], UNSPLASH_CARS.esportivo[2], UNSPLASH_CARS.esportivo[0]]),
       rating: 4.9,
       reviewCount: 8,
     },
@@ -209,7 +213,7 @@ async function main() {
       pricePerDay: 450,
       city: 'Florianópolis',
       state: 'SC',
-      images: [UNSPLASH_CARS.esportivo[2], UNSPLASH_CARS.esportivo[0], UNSPLASH_CARS.esportivo[1]],
+      images: JSON.stringify([UNSPLASH_CARS.esportivo[2], UNSPLASH_CARS.esportivo[0], UNSPLASH_CARS.esportivo[1]]),
       rating: 4.8,
       reviewCount: 22,
     },
@@ -229,7 +233,7 @@ async function main() {
       pricePerDay: 130,
       city: 'Belo Horizonte',
       state: 'MG',
-      images: UNSPLASH_CARS.economico,
+      images: JSON.stringify(UNSPLASH_CARS.economico),
       rating: 4.4,
       reviewCount: 89,
     },
@@ -248,7 +252,7 @@ async function main() {
       pricePerDay: 95,
       city: 'Porto Alegre',
       state: 'RS',
-      images: [UNSPLASH_CARS.economico[1], UNSPLASH_CARS.economico[0], UNSPLASH_CARS.economico[2]],
+      images: JSON.stringify([UNSPLASH_CARS.economico[1], UNSPLASH_CARS.economico[0], UNSPLASH_CARS.economico[2]]),
       rating: 4.3,
       reviewCount: 114,
     },
@@ -267,7 +271,7 @@ async function main() {
       pricePerDay: 80,
       city: 'Salvador',
       state: 'BA',
-      images: [UNSPLASH_CARS.economico[2], UNSPLASH_CARS.economico[1], UNSPLASH_CARS.economico[0]],
+      images: JSON.stringify([UNSPLASH_CARS.economico[2], UNSPLASH_CARS.economico[1], UNSPLASH_CARS.economico[0]]),
       rating: 4.1,
       reviewCount: 203,
     },
@@ -286,7 +290,7 @@ async function main() {
       pricePerDay: 280,
       city: 'São Paulo',
       state: 'SP',
-      images: [UNSPLASH_CARS.sedan[0], UNSPLASH_CARS.sedan[2], UNSPLASH_CARS.sedan[1]],
+      images: JSON.stringify([UNSPLASH_CARS.sedan[0], UNSPLASH_CARS.sedan[2], UNSPLASH_CARS.sedan[1]]),
       rating: 4.7,
       reviewCount: 55,
     },

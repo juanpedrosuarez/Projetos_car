@@ -1,8 +1,13 @@
 import { Router, Response } from 'express'
 import { body, query, validationResult } from 'express-validator'
-import { PrismaClient, CarCategory, Transmission, FuelType } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
+
+const VALID_CATEGORIES = ['SUV', 'SEDAN', 'ESPORTIVO', 'ECONOMICO', 'HATCH', 'PICKUP']
+const VALID_TRANSMISSIONS = ['AUTOMATICO', 'MANUAL']
+const VALID_FUELS = ['GASOLINA', 'DIESEL', 'ELETRICO', 'HIBRIDO', 'FLEX']
 import { authenticate, AuthRequest } from '../middleware/auth.middleware'
 import { uploadImages } from '../middleware/upload.middleware'
+import { parseCar, parseCars } from '../lib/parseImages'
 
 const router = Router()
 const prisma = new PrismaClient()
@@ -60,7 +65,7 @@ router.get('/', [
       prisma.car.count({ where }),
     ])
 
-    res.json({ cars, total, page: Number(page), pages: Math.ceil(total / PAGE_SIZE) })
+    res.json({ cars: parseCars(cars), total, page: Number(page), pages: Math.ceil(total / PAGE_SIZE) })
   } catch {
     res.status(500).json({ error: 'Erro ao buscar carros.' })
   }
@@ -75,7 +80,7 @@ router.get('/featured', async (_req, res: Response): Promise<void> => {
       take: 6,
       include: { owner: { select: { id: true, name: true, avatar: true } } },
     })
-    res.json(cars)
+    res.json(parseCars(cars))
   } catch {
     res.status(500).json({ error: 'Erro ao buscar carros em destaque.' })
   }
@@ -89,7 +94,7 @@ router.get('/my', authenticate, async (req: AuthRequest, res: Response): Promise
       include: { reservations: { orderBy: { createdAt: 'desc' }, take: 5 } },
       orderBy: { createdAt: 'desc' },
     })
-    res.json(cars)
+    res.json(parseCars(cars))
   } catch {
     res.status(500).json({ error: 'Erro ao buscar seus carros.' })
   }
@@ -108,7 +113,7 @@ router.get('/:id', async (req: AuthRequest, res: Response): Promise<void> => {
       return
     }
 
-    res.json(car)
+    res.json(parseCar(car))
   } catch {
     res.status(500).json({ error: 'Erro ao buscar carro.' })
   }
@@ -119,9 +124,9 @@ const carValidation = [
   body('brand').trim().isLength({ min: 1, max: 50 }),
   body('model').trim().isLength({ min: 1, max: 50 }),
   body('year').isInt({ min: 1990, max: new Date().getFullYear() + 1 }),
-  body('category').isIn(Object.values(CarCategory)),
-  body('transmission').isIn(Object.values(Transmission)),
-  body('fuel').isIn(Object.values(FuelType)),
+  body('category').isIn(VALID_CATEGORIES),
+  body('transmission').isIn(VALID_TRANSMISSIONS),
+  body('fuel').isIn(VALID_FUELS),
   body('seats').isInt({ min: 1, max: 15 }),
   body('description').trim().isLength({ min: 10, max: 2000 }),
   body('pricePerDay').isFloat({ min: 1 }),
@@ -149,10 +154,10 @@ router.post('/', authenticate, uploadImages.array('images', 5), carValidation, a
         seats: Number(req.body.seats),
         pricePerDay: Number(req.body.pricePerDay),
         airConditioning: req.body.airConditioning === 'true',
-        images,
+        images: JSON.stringify(images),
       },
     })
-    res.status(201).json(car)
+    res.status(201).json(parseCar(car))
   } catch {
     res.status(500).json({ error: 'Erro ao cadastrar carro.' })
   }

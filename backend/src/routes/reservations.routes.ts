@@ -1,7 +1,20 @@
 import { Router, Response } from 'express'
 import { body, validationResult } from 'express-validator'
-import { PrismaClient, ReservationStatus } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
+
+const ReservationStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED',
+} as const
 import { authenticate, AuthRequest } from '../middleware/auth.middleware'
+import { parseImages } from '../lib/parseImages'
+
+function parseResImages<T extends { car?: { images: unknown } | null }>(r: T): T {
+  if (!r.car) return r
+  return { ...r, car: { ...r.car, images: parseImages(r.car.images) } }
+}
 
 const router = Router()
 const prisma = new PrismaClient()
@@ -77,7 +90,7 @@ router.post('/', authenticate, [
       },
     })
 
-    res.status(201).json(reservation)
+    res.status(201).json(parseResImages(reservation))
   } catch {
     res.status(500).json({ error: 'Erro ao criar reserva.' })
   }
@@ -93,7 +106,7 @@ router.get('/my', authenticate, async (req: AuthRequest, res: Response): Promise
       },
       orderBy: { createdAt: 'desc' },
     })
-    res.json(reservations)
+    res.json(reservations.map(parseResImages))
   } catch {
     res.status(500).json({ error: 'Erro ao buscar reservas.' })
   }
@@ -110,7 +123,7 @@ router.get('/received', authenticate, async (req: AuthRequest, res: Response): P
       },
       orderBy: { createdAt: 'desc' },
     })
-    res.json(reservations)
+    res.json(reservations.map(parseResImages))
   } catch {
     res.status(500).json({ error: 'Erro ao buscar reservas recebidas.' })
   }
@@ -127,7 +140,7 @@ router.get('/car/:carId', async (req, res: Response): Promise<void> => {
       },
       select: { startDate: true, endDate: true },
     })
-    res.json(reservations)
+    res.json(reservations.map(parseResImages))
   } catch {
     res.status(500).json({ error: 'Erro ao buscar disponibilidade.' })
   }
